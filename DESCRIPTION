@@ -1,11 +1,24 @@
 Package: EmsiAgnitio
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Emsi Agnitio API from R
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: person("Duncan", "Brown", email = "duncan.brown@economicmodelling.co.uk",
+  role = c("aut", "cre"))
+Description: A set of tools to allow for constructing and
+    implementing queries for data from the labour market
+    intelligence available through the Emsi
+    Agnitio API from within R.
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports:
+    dplyr,
+    tidyr,
+    httr,
+    purrr,
+    jsonlite,
+    magrittr
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
