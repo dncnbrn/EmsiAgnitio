@@ -14,19 +14,23 @@ agnitio_login <- function(username, password) {
 #' Background function which is used to take Emsi Agnitio login details set by \code{\link{EpistemeLogin}} and obtains a token.
 #' @export
 agnitio_token <- function() {
-  raw_token <- httr::POST("https://auth.emsicloud.com/connect/token",
-                          body=list('client_id'=Sys.getenv("EMSIUN"),
-                                    'client_secret'=Sys.getenv("EMSISECRET"),
-                                    'grant_type'="client_credentials",
-                                    'scope'="emsiauth"),
-                          httr::add_headers(`Content-Type`="application/x-www-form-urlencoded"),
-                          encode="form"#,
-                          # httr::verbose(data_out=TRUE, data_in = TRUE, info = TRUE, ssl=TRUE)
-  )
-  proc_token <- jsonlite::fromJSON(httr::content(raw_token, "text",encoding="UTF-8"),
-                                   simplifyVector = TRUE)
-  Sys.setenv(EMSITOKEN=proc_token$access_token)
-  Sys.setenv(EMSIEXPIRY=Sys.time()+proc_token$expires_in-120)
+  if(Sys.getenv("EMSIUN")=="" | Sys.getenv("EMSISECRET")=="") {
+    message("No credentials set: please use either agnitio_login() or set environment variables in .Rprofile.")
+  } else {
+    raw_token <- httr::POST("https://auth.emsicloud.com/connect/token",
+                            body=list('client_id'=Sys.getenv("EMSIUN"),
+                                      'client_secret'=Sys.getenv("EMSISECRET"),
+                                      'grant_type'="client_credentials",
+                                      'scope'="emsiauth"),
+                            httr::add_headers(`Content-Type`="application/x-www-form-urlencoded"),
+                            encode="form"#,
+                            # httr::verbose(data_out=TRUE, data_in = TRUE, info = TRUE, ssl=TRUE)
+    )
+    proc_token <- jsonlite::fromJSON(httr::content(raw_token, "text",encoding="UTF-8"),
+                                     simplifyVector = TRUE)
+    Sys.setenv(EMSITOKEN=proc_token$access_token)
+    Sys.setenv(EMSIEXPIRY=Sys.time()+proc_token$expires_in-120)
+  }
 }
 
 #' Background function which is used to check if a token is available and valid, and obtain one if not.
