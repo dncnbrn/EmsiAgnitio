@@ -40,3 +40,23 @@ dataset_detail <- function(country, content, release) {
   parameters <- jsonlite::fromJSON(httr::content(parameters, "text", encoding="UTF-8"), simplifyDataFrame = TRUE)
   parameters[c("dimensions","metrics")]
 }
+
+#' Query the details of an Agnitio API dataset
+#'
+#' @description Identify the available metrics and required dimensions for a dataset held on Emsi Episteme.
+#'
+#' @param country The two-digit country identifier for the dataset.
+#' @param content The keyword identifier for the content of the dataset (e.g. \code{"Occupation"}, \code{"Industry"}).
+#' @param release The release or version identifier for the dataset (e.g. \code{"2016.1"}).
+#' @param dimension The dimension you wish to explore.
+#' @return A data frame with the hierarchy and categories.
+#' @examples
+#' dataset_detail("UK","Occupation","2016.1")
+#' @export
+dataset_dimension <- function(country, content, release, dimension) {
+  dataset <- paste("emsi", tolower(country), tolower(content), sep = ".")
+  URI <- paste("http://agnitio.emsicloud.com/meta/dataset", dataset, release, dimension, sep = "/")
+  parameters <- httr::GET(URI, body = NULL, encode = "json", agnitio_settings())
+  parameters <- jsonlite::fromJSON(httr::content(parameters, "text", encoding="UTF-8"), simplifyDataFrame = TRUE)
+  parameters$hierarchy
+}
