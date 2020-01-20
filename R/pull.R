@@ -3,6 +3,7 @@ pullquery <- function(country, content, release, constraints, metrics) {
   emsi_URL <- paste("http://agnitio.emsicloud.com/emsi.", country, ".", content, "/", release, sep = "")
   body <- list(metrics = metrics, constraints = constraints)
   r <- httr::POST(emsi_URL, body = body, encode = "json", agnitio_settings())
+  Sys.sleep(1)
   r2 <- jsonlite::fromJSON(httr::content(r, "text", encoding="UTF-8"), simplifyDataFrame = TRUE)
   outputdata <- as.data.frame(r2$data$rows) %>% dplyr::tbl_df()
   colnames(outputdata) <- r2$data$name
