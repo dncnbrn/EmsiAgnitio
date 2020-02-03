@@ -45,3 +45,4 @@ agnitio_settings <- function() {
   }
   return(httr::add_headers(`Authorization`=paste("bearer",Sys.getenv("EMSITOKEN"),sep=" ")))
 }
+

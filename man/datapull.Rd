@@ -4,7 +4,7 @@
 \alias{datapull}
 \title{Pull data from the Agnitio API}
 \usage{
-datapull(country, content, release, constraints, metrics)
+datapull(country, content, release, constraints, metrics, quota, brake)
 }
 \arguments{
 \item{country}{The two-character country code.}
@@ -17,18 +17,22 @@ datapull(country, content, release, constraints, metrics)
 \code{\link{dimmaker}} or \code{\link{CoW}}.}
 
 \item{metrics}{A set of metrics through which to quantify the data, prepared through \code{\link{metricmaker}}.}
+
+\item{quota}{(optional) changes the limit per query to pass through to the API - default is 400 and if you ask for 500 or more you will get locked out.}
+
+\item{brake}{(optional) changes the buffering time between queries to the API - default is set between 0 and 30 seconds, scaling depending on your demand.}
 }
 \value{
 A data frame of dimensions and metrics, with dimensions classified as factors and metrics as doubles.
 }
 \description{
-Pulls data from the Emsi Episteme API according to specified parameters and returns a prepared data frame for analysis.
+Pulls data from the Emsi Agnitio API according to specified parameters and returns a prepared data frame for analysis.
 }
 \examples{
 met1 <- data.frame(names=c("Jobs.2016","Jobs.2022"), as=c("Jobs.2016","Jobs.2022"))
 met1 <- metricmaker(met1)
 area1 <- data.frame(name=c("Great Britain", "Wales"), code=c("GB", "WAL"))
 areadim <- dimmaker("Area", area1)
-occdim <- dimmaker("Occupation", "asIdentity")
+occdim <- dimmaker("Occupation", data.frame(code="1"))
 datapull("UK","Occupation","2016.1",list(CoW("A"),areadim,occsdim),met1)
 }
