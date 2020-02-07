@@ -124,5 +124,7 @@ datapull <- function(country, content, release, constraints, metrics, quota, bra
     dplyr::mutate(pullit=purrr::map(data, dp)) %>% 
     dplyr::ungroup() %>% 
     dplyr::select(-grp,-data) %>% 
-    tidyr::unnest(col=pullit)
+    tidyr::unnest(col=pullit) %>% 
+    dplyr::group_by_at(vars(one_of(constnames_df$dimensionName))) %>%
+    dplyr::slice(1L)
 }
