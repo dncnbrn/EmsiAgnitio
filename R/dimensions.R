@@ -37,6 +37,7 @@ mapper <- function(mapping) {
 #' occs <- dimmaker("Occupation", mgrs)
 #' @export
 dimmaker <- function(dimension, mapping) {
+  mapping$code <- as.character(mapping.code)
   if (is.atomic(mapping)) {
     if (mapping == "asIdentity") {
       list(dimensionName = dimension, asIdentity = TRUE)
