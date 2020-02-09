@@ -102,7 +102,7 @@ datapull <- function(country, content, release, constraints, metrics, quota, bra
                   length(unique(ration$grp)),
                   "queries and at least",
                   ifelse(length(unique(ration$grp))*brake > 179,
-                         paste(comma(length(unique(ration$grp))*brake/60),
+                         paste(scales::comma(length(unique(ration$grp))*brake/60),
                           "minutes"),
                          paste(round(length(unique(ration$grp))*brake,digits=0),
                                "seconds"))))
