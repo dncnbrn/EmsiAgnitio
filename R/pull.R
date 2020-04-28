@@ -10,9 +10,9 @@ pullquery <- function(country, content, release, constraints, metrics) {
   rm(r)
   rm(r2)
   outputdata <- outputdata %>% dplyr::mutate_if(is.character, as.factor)
-  if(ncol(outputdata[, colnames(outputdata) %in% metrics$as])>1) {
-    outputdata[, colnames(outputdata) %in% metrics$as] <- apply(outputdata[, colnames(outputdata) %in% metrics$as], 2, function(x) as.numeric(x))
-  }
+  # if(ncol(outputdata[, colnames(outputdata) %in% metrics$as])>1) {
+  #   outputdata[, colnames(outputdata) %in% metrics$as] <- apply(outputdata[, colnames(outputdata) %in% metrics$as], 2, function(x) as.numeric(x))
+  # }
   return(outputdata)
 }
 
@@ -108,14 +108,14 @@ datapull <- function(country, content, release, constraints, metrics, quota, bra
   result <- dplyr::left_join(ration, order) %>% 
     dplyr::group_by(grp,dimensionName) %>% 
     tidyr::nest() %>% 
-    dplyr::mutate(dims=map2(dimensionName, data, dimmaker)) %>% 
+    dplyr::mutate(dims=purrr::map2(dimensionName, data, dimmaker)) %>% 
     dplyr::ungroup() %>% 
     dplyr::select(-dimensionName,-data) %>% 
     dplyr::group_by(grp) %>% 
     tidyr::nest()
   dp <- function(dm) {
     datapullcore(country,content,release,
-             flatten(dm),
+             purrr::flatten(dm),
              metrics,
              brake)
   }
@@ -124,7 +124,7 @@ datapull <- function(country, content, release, constraints, metrics, quota, bra
     dplyr::ungroup() %>% 
     dplyr::select(-grp,-data) %>% 
     tidyr::unnest(col=pullit) %>% 
-    dplyr::group_by_at(vars(one_of(constnames_df$dimensionName))) %>%
+    dplyr::group_by_at(dplyr::vars(dplyr::one_of(constnames_df$dimensionName))) %>%
     dplyr::slice(1L) %>% 
     dplyr::ungroup()
 }
