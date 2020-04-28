@@ -58,5 +58,5 @@ dataset_dimension <- function(country, content, release, dimension) {
   URI <- paste("http://agnitio.emsicloud.com/meta/dataset", dataset, release, dimension, sep = "/")
   parameters <- httr::GET(URI, body = NULL, encode = "json", agnitio_settings())
   parameters <- jsonlite::fromJSON(httr::content(parameters, "text", encoding="UTF-8"), simplifyDataFrame = TRUE)
-  parameters$hierarchy
+  parameters$hierarchy %>% dplyr::tbl_df()
 }

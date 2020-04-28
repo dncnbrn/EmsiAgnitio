@@ -9,8 +9,7 @@ pullquery <- function(country, content, release, constraints, metrics) {
   colnames(outputdata) <- r2$data$name
   rm(r)
   rm(r2)
-  outputdata[, colnames(outputdata) %in% names(constraints)] <- apply(outputdata[, colnames(outputdata) %in% names(constraints)],
-                                                                      2, function(x) factor(x))
+  outputdata <- outputdata %>% dplyr::mutate_if(is.character, as.factor)
   if(ncol(outputdata[, colnames(outputdata) %in% metrics$as])>1) {
     outputdata[, colnames(outputdata) %in% metrics$as] <- apply(outputdata[, colnames(outputdata) %in% metrics$as], 2, function(x) as.numeric(x))
   }
@@ -18,8 +17,7 @@ pullquery <- function(country, content, release, constraints, metrics) {
 }
 
 #' @export
-datapullcore <- function(country, content, release, constraints, metrics,brake) {
-  Sys.sleep(brake)
+datapullcore <- function(country, content, release, constraints, metrics,brake=5) {
   if (ncol(metrics) == 2) {
     outputdata <- pullquery(country, content, release, constraints, metrics)
   }
@@ -37,6 +35,7 @@ datapullcore <- function(country, content, release, constraints, metrics,brake) 
     }
   }
   return(outputdata)
+  Sys.sleep(brake)
 }
 
 #' Pull data from the Agnitio API
