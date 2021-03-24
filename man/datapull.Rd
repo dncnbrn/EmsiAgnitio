@@ -4,7 +4,15 @@
 \alias{datapull}
 \title{Pull data from the Agnitio API}
 \usage{
-datapull(country, content, release, constraints, metrics, quota, brake)
+datapull(
+  country,
+  content,
+  release,
+  constraints,
+  metrics,
+  limiter = 20000,
+  brake = 5
+)
 }
 \arguments{
 \item{country}{The two-character country code.}
@@ -18,9 +26,12 @@ datapull(country, content, release, constraints, metrics, quota, brake)
 
 \item{metrics}{A set of metrics through which to quantify the data, prepared through \code{\link{metricmaker}}.}
 
-\item{quota}{(optional) changes the limit per query to pass through to the API - default is 400 and if you ask for 500 or more you will get locked out.}
+\item{limiter}{(optional) numerical limit on the dimensional size of your query, by default limited to 20,000
+as the product of all the groups you're seeking to download - setting a higher number can make this work,
+but think about rationing or saving the result.}
 
-\item{brake}{(optional) changes the buffering time between queries to the API - default is set between 0 and 30 seconds, scaling depending on your demand.}
+\item{brake}{(optional) changes the buffering time between queries to the API - default is set at 5 seconds,
+and if you're planning to hammer the API with lots of queries, it's good to have this at least, maybe more.}
 }
 \value{
 A data frame of dimensions and metrics, with dimensions classified as factors and metrics as doubles.

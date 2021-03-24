@@ -11,7 +11,7 @@ dataset_list <- function() {
   name <- unlist(datasets[[1]])
   versions <- as.numeric(purrr::map_chr(datasets[[2]], length))
   datasets <- data.frame(dataset = c(rep(name, versions)), version = c(unlist(datasets[[2]])))
-  final <- datasets %>% dplyr::tbl_df() %>%
+  final <- datasets %>% dplyr::as_tibble() %>%
     dplyr::mutate(Dataset = as.character(dataset), Version = as.character(version), Country = substr(dataset,
                                                                                                      6, 7), Content = substr(dataset, 9, nchar(Dataset)), Identifier = paste(dataset, "/", version, sep = "")) %>%
     dplyr::arrange(Country) %>%
@@ -58,5 +58,5 @@ dataset_dimension <- function(country, content, release, dimension) {
   URI <- paste("http://agnitio.emsicloud.com/meta/dataset", dataset, release, dimension, sep = "/")
   parameters <- httr::GET(URI, body = NULL, encode = "json", agnitio_settings())
   parameters <- jsonlite::fromJSON(httr::content(parameters, "text", encoding="UTF-8"), simplifyDataFrame = TRUE)
-  parameters$hierarchy %>% dplyr::tbl_df()
+  parameters$hierarchy %>% dplyr::as_tibble()
 }
